@@ -9,6 +9,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.distributions import Categorical
 
+## use parser to maintain a start script
 
 parser = argparse.ArgumentParser(description='PyTorch REINFORCE example')
 parser.add_argument('--gamma', type=float, default=0.99, metavar='G',
@@ -51,11 +52,11 @@ eps = np.finfo(np.float32).eps.item()
 
 
 def select_action(state):
-    state = torch.from_numpy(state).float().unsqueeze(0)
+    state = torch.from_numpy(state).float().unsqueeze(0) # torch nn accept only mini-batch input
     probs = policy(state)
     m = Categorical(probs)
-    action = m.sample()
-    policy.saved_log_probs.append(m.log_prob(action))
+    action = m.sample() # select the action with relative probs
+    policy.saved_log_probs.append(m.log_prob(action)) # log_prob = ln(prob)
     return action.item()
 
 
